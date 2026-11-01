@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "name": "staging-perimeter",
+  "default_action": "deny",
+  "rules": [
+    {"id": "allow-ssh-ops", "action": "allow", "src": "10.10.0.0/24", "dst": "10.20.0.10/32", "protocol": "tcp", "ports": [22]},
+    {"id": "allow-web", "action": "allow", "src": "any4", "dst": "10.20.0.20/32", "protocol": "tcp", "ports": [80, 443]},
+    {"id": "allow-v6-web", "action": "allow", "src": "any6", "dst": "2001:db8::20/128", "protocol": "tcp", "ports": [443]}
+  ],
+  "assertions": [
+    {"id": "office-ssh", "flow": {"src": "10.10.0.50", "dst": "10.20.0.10", "protocol": "tcp", "port": 22}, "expect": "allow"},
+    {"id": "internet-ssh-blocked", "flow": {"src": "1.1.1.1", "dst": "10.20.0.10", "protocol": "tcp", "port": 22}, "expect": "deny"},
+    {"id": "internet-web", "flow": {"src": "8.8.8.8", "dst": "10.20.0.20", "protocol": "tcp", "port": 443}, "expect": "allow"},
+    {"id": "v6-web", "flow": {"src": "2001:4860:4860::8888", "dst": "2001:db8::20", "protocol": "tcp", "port": 443}, "expect": "allow"}
+  ]
+}

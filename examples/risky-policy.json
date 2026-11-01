@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "name": "staging-perimeter-risky",
+  "default_action": "deny",
+  "rules": [
+    {"id": "public-ssh", "action": "allow", "src": "any4", "dst": "10.20.0.10/32", "protocol": "tcp", "ports": [22]},
+    {"id": "allow-ssh-ops", "action": "allow", "src": "10.10.0.0/24", "dst": "10.20.0.10/32", "protocol": "tcp", "ports": [22]},
+    {"id": "allow-web", "action": "allow", "src": "any4", "dst": "10.20.0.20/32", "protocol": "tcp", "ports": [80, 443]},
+    {"id": "allow-v6-web", "action": "allow", "src": "any6", "dst": "2001:db8::20/128", "protocol": "tcp", "ports": [443]}
+  ],
+  "assertions": [
+    {"id": "internet-ssh-blocked", "flow": {"src": "1.1.1.1", "dst": "10.20.0.10", "protocol": "tcp", "port": 22}, "expect": "deny"}
+  ]
+}

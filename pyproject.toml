@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fenceproof"
+version = "1.0.0"
+description = "Offline, deterministic security verification for ordered network ACLs"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+authors = [{name = "Felipe Watter"}]
+keywords = ["security", "firewall", "acl", "network", "policy-as-code", "devsecops"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: System Administrators",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Security",
+]
+
+[project.scripts]
+fenceproof = "fenceproof.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "name": "union-shadow-demo",
+  "default_action": "deny",
+  "rules": [
+    {"id": "deny-lower", "action": "deny", "src": "10.0.0.0/25", "dst": "192.0.2.10/32", "protocol": "tcp", "ports": [[100, 200]]},
+    {"id": "deny-upper", "action": "deny", "src": "10.0.0.128/25", "dst": "192.0.2.10/32", "protocol": "tcp", "ports": [[100, 200]]},
+    {"id": "never-reached", "action": "allow", "src": "10.0.0.0/24", "dst": "192.0.2.10/32", "protocol": "tcp", "ports": [[100, 200]]}
+  ]
+}
