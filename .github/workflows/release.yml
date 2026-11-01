@@ -1,0 +1,44 @@
+name: Publish v1.0.0 after CI
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: >-
+      ${{ github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.event == 'push' &&
+          github.event.workflow_run.head_branch == 'main' &&
+          github.event.workflow_run.head_repository.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout verified commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Publish immutable first release if absent
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if gh release view v1.0.0 --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo 'Release v1.0.0 already exists. No changes.'
+            exit 0
+          fi
+          git archive --format=zip --prefix=fenceproof/ \
+            --output=fenceproof-v1.0.0.zip "$COMMIT_SHA"
+          sha256sum fenceproof-v1.0.0.zip > fenceproof-v1.0.0.zip.sha256
+          gh release create v1.0.0 \
+            fenceproof-v1.0.0.zip fenceproof-v1.0.0.zip.sha256 \
+            --repo "$GH_REPO" \
+            --target "$COMMIT_SHA" \
+            --title 'FenceProof v1.0.0 — Offline ACL Verification' \
+            --notes-file RELEASE_NOTES.md
