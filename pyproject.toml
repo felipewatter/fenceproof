@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fenceproof"
-version = "1.0.0"
+version = "1.0.1"
 description = "Offline, deterministic security verification for ordered network ACLs"
 readme = "README.md"
 requires-python = ">=3.11"
